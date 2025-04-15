@@ -1,13 +1,16 @@
+import { fetchGraphFieldsInfo, transactionIntrospectSchema } from "../request.js";
+import { homePage } from "./home.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     let token = getCookie("authToken"); // Check if token exists
 
     if (token) {
         console.log("Token found, logging in automatically...");
         try {
-            let user_info = await fetchUserInfo(token);
-            console.log("User info:", user_info);
+            //await console.log(fetchGraphFieldsInfo(token))
+            homePage()
         } catch (error) {
-            console.error("Invalid or expired token, clearing cookie.");
+            console.error("Invalid or expired token, clearing cookie.", error);
             document.cookie = "authToken=; path=/; max-age=0"; // Clear the cookie
         }
     }
@@ -24,11 +27,17 @@ export async function login() {
             console.log("Logging in...");
             const token = await submitLoginForm(username, password);
             
-            // Store token in a cookie (expires in 1 day)
-            document.cookie = `authToken=${token}; path=/; max-age=${60 * 60 }; Secure`;
+            // Store token in a cookie (expires in 1 hour)
+            document.cookie = `authToken=${token}; path=/; max-age=${60 * 60}; Secure`;
 
             let user_info = await fetchUserInfo(token);
             console.log("User info:", user_info);
+
+            // ✅ Store the user ID in a cookie (optional: same expiry as token)
+            document.cookie = `id=${user_info.id}; path=/; max-age=${60 * 60}; Secure`;
+
+            // Call homePage or redirect
+            homePage();
         } catch (error) {
             console.error("Login failed:", error);
         }
@@ -87,7 +96,7 @@ export async function fetchUserInfo(token) {
 }
 
 // Function to get a cookie by name
-function getCookie(name) {
+export function getCookie(name) {
     const cookies = document.cookie.split('; ');
     for (let cookie of cookies) {
         let [key, value] = cookie.split('=');
