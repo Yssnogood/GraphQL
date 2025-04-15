@@ -1,4 +1,4 @@
-import { fetchGraphFieldsInfo, transactionIntrospectSchema } from "../request.js";
+import { fetchUserInfo } from "../request.js";
 import { homePage } from "./home.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -29,9 +29,6 @@ export async function login() {
             
             // Store token in a cookie (expires in 1 hour)
             document.cookie = `authToken=${token}; path=/; max-age=${60 * 60}; Secure`;
-
-            let user_info = await fetchUserInfo(token);
-            console.log("User info:", user_info);
 
             // ✅ Store the user ID in a cookie (optional: same expiry as token)
             document.cookie = `id=${user_info.id}; path=/; max-age=${60 * 60}; Secure`;
@@ -65,35 +62,7 @@ export async function submitLoginForm(username, password) {
     return data;
 }
 
-export async function fetchUserInfo(token) {
-    const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            query: `
-                query {
-                    user {
-                        id
-                        login
-                        attrs
-                        totalUp
-                        totalDown
-                    }
-                }
-            `
-        })
-    });
 
-    if (!response.ok) {
-        throw new Error('Failed to fetch user info');
-    }
-
-    const data = await response.json();
-    return data.data.user[0];
-}
 
 // Function to get a cookie by name
 export function getCookie(name) {

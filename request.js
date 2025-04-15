@@ -92,7 +92,10 @@ export async function transactionTableByUserId(token, userId) {
                         objectId
                         userId
                         createdAt
-                        path
+                        object {
+                        name
+                        type
+                    }
                     }
                 }
             `
@@ -104,5 +107,44 @@ export async function transactionTableByUserId(token, userId) {
     }
 
     const data = await response.json();
-    return data.data.transaction;
+
+    // Filter for transactions that ARE project type
+    const filteredData = data.data.transaction.filter((transaction) => 
+        transaction.object && transaction.object.type === 'project'
+    );
+
+    console.log(filteredData)
+
+    return filteredData;
+
+}
+
+export async function fetchUserInfo(token) {
+    const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            query: `
+                query {
+                    user {
+                        id
+                        login
+                        attrs
+                        totalUp
+                        totalDown
+                    }
+                }
+            `
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch user info');
+    }
+
+    const data = await response.json();
+    return data.data.user[0];
 }
