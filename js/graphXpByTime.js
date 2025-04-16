@@ -42,7 +42,7 @@ function generateGraphPoints(data, { svgWidth, svgHeight, padding, minDate, maxD
 function generateTitle(svgWidth) {
   return `
     <text x="${svgWidth / 2}" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">
-      Project XP over Time
+      XP earned by Project
     </text>
   `;
 }

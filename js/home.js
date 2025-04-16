@@ -1,6 +1,7 @@
 import { getCookie } from "./login.js"
-import { transactionTableByUserId, fetchUserInfo } from "../request.js";
+import { transactionTableByUserId, fetchUserInfo, allUserInfos, xpUser } from "../request.js";
 import { graphXpByTime } from "./graphXpByTime.js";
+import { DisplayAuditRatio, DisplayUserInfos } from "../userInfos.js";
 
 
 export async function homePage(){
@@ -12,14 +13,34 @@ export async function homePage(){
     let user_info = await fetchUserInfo(token);
     let id_user = user_info.id;
     
+    console.log(user_info)
+
+    
     let data_transaction = transactionTableByUserId(token, id_user);
     createLayout();
-
+    
+    
     data_transaction.then(function(result){
         console.log(result)
         graphXpByTime(result);
     })
     
+    let all_data = allUserInfos(token)
+    
+    all_data.then(function(result){
+        console.log(result)
+    })
+    
+    
+    let xp = xpUser(token)
+    xp.then(function(result){
+        console.log(result)
+
+    })
+    
+    DisplayUserInfos(user_info)
+    DisplayAuditRatio(user_info)
+
 }
 
 
@@ -31,7 +52,6 @@ function createLayout() {
     // Create left box for personal data
     const leftBox = document.createElement("div");
     leftBox.id = "left-box";
-    leftBox.innerHTML = "<h3>User Info</h3><p>Name: </p><p>Email: </p>"; // example content
 
     // Right section with two graph boxes
     const rightSection = document.createElement("div");

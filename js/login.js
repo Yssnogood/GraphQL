@@ -30,9 +30,6 @@ export async function login() {
             // Store token in a cookie (expires in 1 hour)
             document.cookie = `authToken=${token}; path=/; max-age=${60 * 60}; Secure`;
 
-            // ✅ Store the user ID in a cookie (optional: same expiry as token)
-            document.cookie = `id=${user_info.id}; path=/; max-age=${60 * 60}; Secure`;
-
             // Call homePage or redirect
             homePage();
         } catch (error) {
@@ -61,8 +58,6 @@ export async function submitLoginForm(username, password) {
     console.log("Login successful, token received.");
     return data;
 }
-
-
 
 // Function to get a cookie by name
 export function getCookie(name) {
