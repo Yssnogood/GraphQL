@@ -1,7 +1,7 @@
 import { getCookie } from "./login.js"
-import { transactionTableByUserId, fetchUserInfo, allUserInfos, xpUser } from "../request.js";
-import { graphXpByTime } from "./graphXpByTime.js";
-import { DisplayAuditRatio, DisplayUserInfos } from "../userInfos.js";
+import { transactionTableByUserId, fetchUserInfo, allUserInfos, xpUser, userXPLevel } from "../request.js";
+import { graphProjectXpByTime, xpByTime } from "./ProjectXpByTime.js";
+import { DisplayAuditRatio, DisplayUserInfos, DisplayXp } from "../userInfos.js";
 
 
 export async function homePage(){
@@ -22,7 +22,8 @@ export async function homePage(){
     
     data_transaction.then(function(result){
         console.log(result)
-        graphXpByTime(result);
+        graphProjectXpByTime(result);
+        xpByTime(result)
     })
     
     let all_data = allUserInfos(token)
@@ -32,13 +33,16 @@ export async function homePage(){
     })
     
     
+    DisplayUserInfos(user_info)
+    let lvl = await userXPLevel(token, user_info.login)
+    
     let xp = xpUser(token)
     xp.then(function(result){
         console.log(result)
-
+        DisplayXp(result, lvl)
     })
-    
-    DisplayUserInfos(user_info)
+
+    console.log(lvl)
     DisplayAuditRatio(user_info)
 
 }
@@ -67,6 +71,7 @@ function createLayout() {
 
     // Second graph box
     const graph2 = document.createElement("div");
+    graph2.id = "graph2"
     graph2.className = "graph-box";
     const svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg2.innerHTML = `<circle cx="60" cy="60" r="50" fill="lightgreen" />`; // Example SVG content

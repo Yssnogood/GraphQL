@@ -583,3 +583,31 @@ user {
     const data = await response.json();
     return data.data.user[0];
 }
+
+export async function userXPLevel(token, userLogin) {
+  
+  const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+          query: `
+              query {
+                  event_user(where: { userLogin: { _eq: "${userLogin}" }, eventId: { _eq: 303 } }) {
+                      level
+                  }
+              }
+          `
+      })
+  });
+  if (!response.ok) {
+      throw new Error('Failed to fetch user level')
+  }
+  const data = await response.json()
+  
+  
+  // Return the level or 0 if no data is found
+  return data.data.event_user[0]?.level || 0;
+}

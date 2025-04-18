@@ -1,4 +1,3 @@
-import { fetchUserInfo } from "../request.js";
 import { homePage } from "./home.js";
 
 document.addEventListener("DOMContentLoaded", async () => {

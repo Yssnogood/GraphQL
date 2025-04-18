@@ -77,14 +77,32 @@ export function DisplayAuditRatio(data) {
     profil.appendChild(audit_ratio);
   }
   
-export function DisplayXp(xp){
+  export function DisplayXp(xp, level) {
     const profil = document.getElementById("left-box");
 
-        // Clear previous instance if needed
-    const existing = document.getElementById("audit_ratio");
+    // Clear previous instance if needed
+    const existing = document.getElementById("xp_div");
     if (existing) existing.remove();
 
-    const audit_ratio = document.createElement("div");
-    audit_ratio.id = "audit_ratio";
+    const xp_div = document.createElement("div"); // Use "div" instead of "xp_div"
+    xp_div.id = "xp_div";
 
+    // Set inner content (example content — adjust as needed)
+    xp_div.innerHTML = `
+        <div style="margin-bottom: 10px;">
+            <h3 style="margin-bottom: 5px;">XP Stats</h3>
+            <p><strong>Total XP:</strong> ${xp.amount.toLocaleString()}</p>
+            <p><strong>Level:</strong> ${level}</p>
+        </div>
+    `;
+
+    // Apply the same styling as audit_ratio
+    xp_div.style.padding = "10px";
+    xp_div.style.border = "1px solid #ddd";
+    xp_div.style.borderRadius = "8px";
+    xp_div.style.backgroundColor = "#f9f9f9";
+    xp_div.style.marginBottom = "20px";
+    xp_div.style.fontSize = "14px";
+
+    profil.appendChild(xp_div);
 }
