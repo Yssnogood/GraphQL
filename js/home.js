@@ -1,5 +1,5 @@
 import { getCookie, logoutButton } from "./login.js"
-import { transactionTableByUserId, fetchUserInfo, allUserInfos, xpUser, userXPLevel, getUserAudit, fetchUserAudit } from "./request.js";
+import { transactionTableByUserId, fetchUserInfo, xpUser, userXPLevel, fetchUserAudit } from "./request.js";
 import { graphProjectXpByTime, xpByTime } from "./ProjectXpByTime.js";
 import { DisplayAuditRatio, DisplayAuditValidator, DisplayUserInfos, DisplayXp } from "./userInfos.js";
 
@@ -7,14 +7,10 @@ import { DisplayAuditRatio, DisplayAuditValidator, DisplayUserInfos, DisplayXp }
 export async function homePage(){
     document.body.innerHTML = ''
 
-
     let token = getCookie('authToken');
     
     let user_info = await fetchUserInfo(token);
     let id_user = user_info.id;
-    
-    console.log(user_info)
-
     
     let data_transaction = transactionTableByUserId(token, id_user);
     createLayout();
@@ -39,7 +35,6 @@ export async function homePage(){
     DisplayAuditRatio(user_info)
     
     let audit_res = await fetchUserAudit(token, user_info.login)
-    console.log(audit_res)
     DisplayAuditValidator(audit_res)
 
     logoutButton()

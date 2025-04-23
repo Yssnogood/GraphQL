@@ -131,7 +131,7 @@ export function DisplayAuditValidator(dataArray) {
   // Header
   let content = `
     <div style="margin-bottom: 10px;">
-      <h3 style="margin-bottom: 10px;"> Lastest Audits Validated</h3>
+      <h3 style="margin-bottom: 10px;"> Audits Performed </h3>
   `;
 
   // Loop through the data array

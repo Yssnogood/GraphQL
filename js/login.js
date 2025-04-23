@@ -1,41 +1,46 @@
 import { homePage } from "./home.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let token = getCookie("authToken"); // Check if token exists
+    let token = getCookie("authToken");
 
     if (token) {
         console.log("Token found, logging in automatically...");
         try {
-            //await console.log(fetchGraphFieldsInfo(token))
-            homePage()
+            homePage();
         } catch (error) {
             console.error("Invalid or expired token, clearing cookie.", error);
-            document.cookie = "authToken=; path=/; max-age=0"; // Clear the cookie
+            document.cookie = "authToken=; path=/; max-age=0";
         }
     }
 });
 
 document.getElementById("login-button").addEventListener("click", login);
 
+function showMessage(message, isError = false) {
+    const messageDiv = document.getElementById("login-message");
+    messageDiv.textContent = message;
+    messageDiv.style.color = isError ? "#e74c3c" : "#2ecc71";
+    messageDiv.style.marginTop = "10px";
+    messageDiv.style.fontWeight = "bold";
+}
+
 export async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    
+
     if (username && password) {
         try {
             console.log("Logging in...");
             const token = await submitLoginForm(username, password);
-            
-            // Store token in a cookie (expires in 1 hour)
             document.cookie = `authToken=${token}; path=/; max-age=${60 * 60}; Secure`;
-
-            // Call homePage or redirect
+            showMessage(""); // Clear any previous error
             homePage();
         } catch (error) {
+            showMessage("Login failed. Please check your credentials.", true);
             console.error("Login failed:", error);
         }
     } else {
-        console.log("Username and password are required.");
+        showMessage("Username and password are required.", true);
     }
 }
 
@@ -58,7 +63,6 @@ export async function submitLoginForm(username, password) {
     return data;
 }
 
-// Function to get a cookie by name
 export function getCookie(name) {
     const cookies = document.cookie.split('; ');
     for (let cookie of cookies) {
@@ -75,10 +79,9 @@ export function logoutButton() {
     if (existing) existing.remove();
 
     const logout = document.createElement("button");
-    logout.id = "logout-button"; // corrected the ID to match consistently
+    logout.id = "logout-button";
     logout.textContent = "Logout";
 
-    // Styling the button
     logout.style.padding = "10px 20px";
     logout.style.marginTop = "10px";
     logout.style.border = "none";
@@ -89,7 +92,6 @@ export function logoutButton() {
     logout.style.fontSize = "14px";
     logout.style.transition = "background-color 0.3s ease";
 
-    // Hover effect
     logout.addEventListener("mouseenter", () => {
         logout.style.backgroundColor = "#c0392b";
     });
