@@ -142,7 +142,7 @@ function setupTooltip(container) {
 
 export function xpByTime(data) {
 
-  console.log("Inside xpByTime : ", data)
+  //console.log("Inside xpByTime : ", data)
 
     const svgWidth = 600;
     const svgHeight = 300;
@@ -165,8 +165,8 @@ export function xpByTime(data) {
     const dates = cumulativeData.map(d => new Date(d.createdAt).getTime());
     const amounts = cumulativeData.map(d => d.amount);
 
-    console.log("Sorted data : ", sortedData)
-    console.log("Cumulative Data :", cumulativeData)
+    //console.log("Sorted data : ", sortedData)
+    //console.log("Cumulative Data :", cumulativeData)
   
     const minDate = Math.min(...dates);
     const maxDate = Math.max(...dates);

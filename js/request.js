@@ -611,3 +611,94 @@ export async function userXPLevel(token, userLogin) {
   // Return the level or 0 if no data is found
   return data.data.event_user[0]?.level || 0;
 }
+
+export async function getUserAudit(token){
+  const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+        query: `
+            query {
+                  audits {
+                    id
+                    grade
+                    createdAt
+                    updatedAt
+                    version
+                    group {
+                      id
+                      object {
+                        id
+                        name
+                        type
+                        attrs(path: "$.auditRequirements")
+                      }
+                    }
+                    auditor {
+                      id
+                      login
+                      avatarUrl
+                    }
+                  }
+            }
+        `
+    })
+});
+
+if (!response.ok) {
+    throw new Error('Failed to fetch user info');
+}
+
+const data = await response.json();
+return data.data;
+}
+
+export async function fetchUserAudit(token, userName, onlyLast = false) {
+  const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+          query: `
+              query {
+                  audit(
+                      where: {
+                          _and: [
+                              {auditorLogin: {_eq: "${userName}"}},
+                              {grade: {_is_null: false}}
+                          ]
+                      }
+                      ${onlyLast ? ', limit: 1' : ''},
+                      order_by: {group: {createdAt: desc}}
+                  ) {
+                      private {
+                          code 
+                      }
+                      grade
+                      resultId
+                      group {
+                          captainLogin
+                          createdAt
+                          object {
+                              name
+                              type
+                          }
+                      }
+                  }
+              }
+          `
+      })
+  });
+  if (!response.ok) {
+      throw new Error('Failed to fetch user info')
+  }
+  const data = await response.json()
+
+
+  return data.data.audit
+}

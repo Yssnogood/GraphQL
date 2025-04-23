@@ -106,3 +106,51 @@ export function DisplayAuditRatio(data) {
 
     profil.appendChild(xp_div);
 }
+
+
+export function DisplayAuditValidator(dataArray) {
+  const profil = document.getElementById("left-box");
+
+  // Clear previous instance if needed
+  const existing = document.getElementById("auditValidator");
+  if (existing) existing.remove();
+
+  const audit_validator = document.createElement("div");
+  audit_validator.id = "auditValidator";
+
+  // Set scrollable style
+  audit_validator.style.maxHeight = "300px"; // You can adjust this height as needed
+  audit_validator.style.overflowY = "auto";
+  audit_validator.style.padding = "10px";
+  audit_validator.style.border = "1px solid #ddd";
+  audit_validator.style.borderRadius = "8px";
+  audit_validator.style.backgroundColor = "#f9f9f9";
+  audit_validator.style.marginBottom = "20px";
+  audit_validator.style.fontSize = "14px";
+
+  // Header
+  let content = `
+    <div style="margin-bottom: 10px;">
+      <h3 style="margin-bottom: 10px;"> Lastest Audits Validated</h3>
+  `;
+
+  // Loop through the data array
+  dataArray.forEach((item, index) => {
+    const date = new Date(item.group?.createdAt).toLocaleDateString();
+    const captain = item.group?.captainLogin ?? "Unknown";
+    const projectName = item.group?.object?.name ?? "Unnamed Project";
+
+    content += `
+      <div style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+        <p><strong>Date:</strong> ${date}</p>
+        <p><strong>Captain:</strong> ${captain}</p>
+        <p><strong>Project:</strong> ${projectName}</p>
+      </div>
+    `;
+  });
+
+  content += `</div>`;
+  audit_validator.innerHTML = content;
+
+  profil.appendChild(audit_validator);
+}

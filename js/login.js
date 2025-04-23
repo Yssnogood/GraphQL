@@ -67,3 +67,43 @@ export function getCookie(name) {
     }
     return null;
 }
+
+export function logoutButton() {
+    const left_bar = document.getElementById("left-box");
+
+    const existing = document.getElementById("logout-button");
+    if (existing) existing.remove();
+
+    const logout = document.createElement("button");
+    logout.id = "logout-button"; // corrected the ID to match consistently
+    logout.textContent = "Logout";
+
+    // Styling the button
+    logout.style.padding = "10px 20px";
+    logout.style.marginTop = "10px";
+    logout.style.border = "none";
+    logout.style.borderRadius = "8px";
+    logout.style.backgroundColor = "#e74c3c";
+    logout.style.color = "#fff";
+    logout.style.cursor = "pointer";
+    logout.style.fontSize = "14px";
+    logout.style.transition = "background-color 0.3s ease";
+
+    // Hover effect
+    logout.addEventListener("mouseenter", () => {
+        logout.style.backgroundColor = "#c0392b";
+    });
+    logout.addEventListener("mouseleave", () => {
+        logout.style.backgroundColor = "#e74c3c";
+    });
+
+    logout.addEventListener("click", () => {
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+            document.cookie = "authToken=; path=/; max-age=0";
+            location.reload();
+        }
+    });
+
+    left_bar.appendChild(logout);
+}
